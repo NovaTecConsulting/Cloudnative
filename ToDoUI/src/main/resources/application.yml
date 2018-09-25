@@ -1,24 +1,16 @@
 spring:
   application:
-    name: ToDoCommandService
+    name: ToDoUIService
   profiles:
     active: "cloud"
-
 
 ---
 
 spring:
   profiles: local
   
-
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: admin
-    password: Qo93yelf3uqn
-
 server:
-  port: 9084
+  port: 9080
 
 eureka:
   client:
@@ -39,7 +31,3 @@ eureka:
   client:
     service-url:
       defaultZone: http://todoserviceregistry.local.pcfdev.io/eureka/
-    
-    
-    
-    

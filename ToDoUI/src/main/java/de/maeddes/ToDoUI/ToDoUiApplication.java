@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,13 +43,17 @@ public class ToDoUiApplication {
         List<ServiceInstance> instances = discoveryClient.getInstances("ToDoQueryService");
 
         URI uri = null;
+        String host ="";
         if (instances != null && instances.size() > 0) {
+            host = instances.get(0).getHost();
             uri = instances.get(0).getUri();
         }
 
         System.out.println("In handleRequest: URI from Eureka: " + uri.toString());
+       
 
-        String url = uri+"/todos/";
+        String url = "http://"+host+"/todos/";
+        
         ResponseEntity<String[]> response = template.getForEntity(url, String[].class);
 
         System.out.println("In getItems: "+response);
@@ -85,13 +90,17 @@ public class ToDoUiApplication {
         List<ServiceInstance> instances = discoveryClient.getInstances("ToDoCommandService");
 
         URI uri = null;
+        String host = "";
         if (instances != null && instances.size() > 0) {
+            host = instances.get(0).getHost();
             uri = instances.get(0).getUri();
         }
         System.out.println("In handleRequest: URI from Eureka: " + uri.toString());
 
         String suffix = done ? "/done/"  :  "/todo/";
-        String url = uri+suffix+toDo;
+        
+              
+        String url = "http://"+host+suffix+toDo;
 
         System.out.println("In handleRequest: final URL: " + url);
 

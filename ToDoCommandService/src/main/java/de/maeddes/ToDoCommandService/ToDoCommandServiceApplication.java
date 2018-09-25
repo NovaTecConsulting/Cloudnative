@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -78,19 +79,22 @@ public class ToDoCommandServiceApplication {
         List<ServiceInstance> instances = discoveryClient.getInstances("ToDoQueryService");
 
         URI uri = null;
+        String host = "";
         if (instances != null && instances.size() > 0) {
             uri = instances.get(0).getUri();
+            host = instances.get(0).getHost();
         }
         System.out.println("In handleRequest: URI from Eureka: " + uri.toString());
-
+       
+        
         if (uri != null) {
             if (!toDoItem.done) {
-                String url = uri + "/add/" + toDoItem.description;
+                String url = "http://"+host + "/add/"+toDoItem.description;
                 ResponseEntity<String> response = template.postForEntity(url, null, String.class);
 
                 System.out.println(response);
             } else if (toDoItem.done) {
-                String url = uri + "/setDone/" + toDoItem.description;
+                String url = "http://"+host+"/setDone/"+toDoItem.description;
                 ResponseEntity<String> response = template.postForEntity(url, null, String.class);
 
                 System.out.println(response);

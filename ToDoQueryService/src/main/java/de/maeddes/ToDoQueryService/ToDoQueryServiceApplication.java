@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +59,7 @@ public class ToDoQueryServiceApplication {
         return toDo+" done!";
 
 	}
+	
 	
 	@RequestMapping(value = "/add/{toDo}", method = RequestMethod.POST, headers = "Accept=application/json")
     public String add(@PathVariable String toDo){

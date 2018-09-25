@@ -1,3 +1,15 @@
+spring:
+  application:
+    name: ToDoServiceRegistry
+  profiles:
+    active: "cloud"
+
+
+---
+spring:
+  profiles: local
+
+
 server:
   port: 8761
 
@@ -9,7 +21,18 @@ eureka:
     fetchRegistry: false
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+---
 
-management:
-  security:
-    enabled: false
+spring:
+  profiles: cloud
+
+eureka:
+  instance:
+    nonSecurePort: 8761
+    hostname: ${vcap.application.uris[0]}
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    service-url:
+      defaultZone: http://todoserviceregistry.local.pcfdev.io/eureka/
+      
