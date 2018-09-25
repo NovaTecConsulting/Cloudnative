@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: todo-cn-app
+  name: todouiservice
+  labels:
+    app: todouiservice
+spec:
+  type: NodePort
+  ports:
+  - port: 9080
+    name: todouiservice
+    targetPort: 9080
+  selector:
+    app: todouiservice
+  type: NodePort
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  namespace: todo-cn-app
+  name: todouiservice
+  labels:
+    app: todouiservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todouiservice
+  template:
+    metadata:
+      labels:
+        app: todouiservice
+    spec:
+      containers:
+      - name: todouiservice
+        image: mirna/todouiservice
+        ports:
+        - containerPort: 9080
+        env:
+        - name: EUREKA_URL
+          value: "http://todoserviceregistry:8761/eureka"
+        - name: SERVER_PORT
+          value: "9080"          
+
+    

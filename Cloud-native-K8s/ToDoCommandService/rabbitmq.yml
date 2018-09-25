@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  namespace: todo-cn-app
+  name: todo-messaging
+  labels: 
+    app: todo-messaging
+spec: 
+  type: NodePort
+  ports:
+    - port: 5672
+      name: todo-messaging
+      targetPort: 5672
+  selector: 
+    app: todo-messaging
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  namespace: todo-cn-app
+  name: todo-messaging
+  labels:
+    app: todo-messaging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-messaging
+  template:
+    metadata:
+      labels:
+        app: todo-messaging
+    spec:
+      containers:
+      - name: rabbitmq
+        image: tutum/rabbitmq:latest
+        env:
+        - name: RABBITMQ_PASS
+          value: admin
+        ports:
+        - containerPort: 5672
+          name: rabbitmq
